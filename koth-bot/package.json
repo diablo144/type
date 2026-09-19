@@ -11,6 +11,7 @@
     "once": "node src/main.js --once",
     "sniff": "node src/sniff.js",
     "selfplay": "node test/selfplay.js",
+    "adapter": "node test/adapter.js",
     "validate": "node src/validate.js"
   },
   "keywords": [],

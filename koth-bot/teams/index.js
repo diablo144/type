@@ -38,6 +38,15 @@ export function getTeamExport(formatId) {
   return fs.readFileSync(file, 'utf8');
 }
 
+// Roster export for PUT /api/team: trimmed to the server's maxTeamSize.
+// Files ship 6 sets ordered best-first, so slicing keeps the best leads.
+export function getRosterExport(formatId, maxSize = 6) {
+  const text = getTeamExport(formatId);
+  const sets = Teams.import(text);
+  if (!sets || sets.length <= maxSize) return text;
+  return Teams.export(sets.slice(0, maxSize));
+}
+
 // Battle-ready export: trimmed to the format's bring limit when smaller than 6.
 // Keeps the FIRST N sets (files are ordered with the best leads first).
 export function getBattleExport(formatId) {

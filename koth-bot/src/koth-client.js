@@ -1,152 +1,159 @@
-// KOTH bot client: HTTP lobby layer + Showdown-protocol battle driver.
+// KOTH bot client: HTTP lobby + battle socket + Showdown-protocol battle driver.
 //
-// WHAT IS KNOWN (verified against the live server on 2026-09-19):
-//   GET /api/config               -> public JSON: {formatId, acceptSeconds,
-//                                      reconnectSeconds, turnSeconds, eloStart,
-//                                      rctfEnabled, nowMs, formats:[54]}.
-//   GET /api/me, /api/ladder      -> {"error":"invalid_session"} unauthenticated,
-//                                      so both EXIST and need auth.
-//   GET /api/queue                -> {"error":"invalid_origin"}: EXISTS and checks
-//                                      the Origin header. Almost certainly the
-//                                      WebSocket upgrade for queue + battle traffic.
-//   GET /auth/rctf/start          -> OAuth login entry.
-//   35+ other paths (/api/team, /api/roster, /api/battle, /ws, ...) -> not_found.
-//   CONCLUSION: the lobby API is tiny on purpose. All live traffic goes through
-//   ONE origin-guarded socket: /api/queue. Roster submit is most likely
-//   POST/PATCH/PUT /api/me {formatId, team} or a message on the queue socket;
-//   the client tries candidates in order (server error strings are informative).
+// REVERSED FROM THE SHIPPED WEB CLIENT (SolidJS bundle
+// /assets/index-RInX2HYp.js, read in full on 2026-09-19). Every route, method,
+// message shape and poll interval below is confirmed client behavior; the bot
+// mirrors the browser exactly (same endpoints, same 1.5s lobby poll).
 //
-// Battle protocol (Showdown standard, verified locally against @pkmn/sim):
-//   - server sends `|request|{...}` per decision point; client replies
-//     `<room>|/choose <choiceString>` where choiceString is e.g.
-//     `move 1 2, move 3`, `switch 4`, `team 1, 2, 3`, `pass, switch 3`.
-//   - invalid choices come back as `|error|[Invalid choice] ...` with NO new
-//     request: re-decide the SAME request excluding rejected strings.
-//   - wait-requests (`{"wait":true}`) mean "opponent is deciding": send NOTHING.
-//   - fainted slots may be offered moves with no forceSwitch flag (no bench to
-//     switch to): those slots must get `pass`, never move/switch.
-//   - mid-turn single-slot prompts (`{forceSwitch:[true,false]}`, no `active`)
-//     take a SINGLE action, not one per slot.
+// Auth: session cookie from browser sign-in (rCTF OAuth) + an `Origin` header
+// on every request (missing origin -> `invalid_origin`). All HTTP is JSON;
+// errors are `{error: "snake_case", problems?: [...]}` with non-2xx status.
+//
+// Endpoints:
+//   GET  /api/config            public. {devAuth, rctfEnabled, formatId,
+//                               formatName, formats[], eloStart, acceptSeconds,
+//                               reconnectSeconds, turnSeconds, nowMs,
+//                               gameType?, minTeamSize?, maxTeamSize?}
+//   GET  /api/me                {name, elo, occupancy, hasTeam, exportText,
+//                               gamesPlayed, queue, admin, formatId,
+//                               formatName, gameType?, minTeamSize?,
+//                               maxTeamSize?, nowMs}
+//   GET  /api/queue             authoritative lobby state: {occupancy:
+//                               idle|queued|accepting|in_match, queueExpiresAt?,
+//                               nowMs, match?: {id, status, you: p1|p2,
+//                               opponent, accepted, opponentAccepted,
+//                               acceptDeadlineMs}}
+//   PUT  /api/team              {exportText} (Showdown export text; only while
+//                               idle) -> {exportText}; rejects illegal rosters
+//                               with {error, problems[]}
+//   POST   /api/queue           join (needs a saved roster + idle)
+//   DELETE /api/queue           leave
+//   POST /api/matches/{id}/accept | POST .../reject  -> queue state
+//   GET  /api/matches/{id}      full battle snapshot (also the re-sync
+//                               primitive after a socket drop). 409 = the match
+//                               was cancelled or still needs acceptance.
+//   GET  /api/ladder            {teams: [{name, elo, gamesPlayed, occupancy,
+//                               hidden}]}
+//   POST /auth/logout
+//
+// Battle socket: WS /ws/battle/{id} (Cookie + Origin headers; the browser uses
+// no subprotocols when devAuth is off, as on prod).
+//   C->S: {type:"choose", choice, requestId} | {type:"forfeit"}
+//   S->C: {type:"snapshot", you, opponent, status: pending_connect|active|done,
+//          field, log[], logOffset, request|null, requestId, choiceSubmitted,
+//          deadlineMs, nowMs, connections, disconnectDeadlines,
+//          result?: {winner: p1|p2|draw, endReason, eloAfter}}
+//        | {type:"error", error}
+// `request` is a RAW @pkmn/sim request (side/active/forceSwitch/teamPreview/
+// wait/maxChosenTeamSize); `log` lines are RAW Showdown protocol lines.
+// Choice strings are Showdown-style with two canonicalizations the web client
+// applies (see canonicalizeChoice):
+//   - team preview: "team 123456" (digits only, no separators)
+//   - doubles targets carry an explicit sign: "move 1 +2", "move 1 -1"
+// Slots join with ", " exactly like a Showdown "/choose" payload (minus the
+// "/choose" prefix). The web client only ever emits the "terastallize"
+// gimmick; mega/ultra/zmove/dynamax suffixes are unproven against the server,
+// so the bot tries them once (the AI genuinely wants them) and strips them on
+// the first {type:"error"} for that request.
 import WebSocket from 'ws';
 import {BattleAI} from './ai.js';
 import {Tracker} from './tracker.js';
-import {formatMeta, getBattleExport, getPackedTeam} from '../teams/index.js';
+import {formatMeta, getRosterExport} from '../teams/index.js';
+
+export const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 // ---------------------------------------------------------------------------
-// PROTOCOL — every server-specific guess lives here.
-// ---------------------------------------------------------------------------
-export const PROTOCOL = {
-  // Public config (KNOWN GOOD).
-  configPath: '/api/config',
-  // Authed identity + standings (KNOWN TO EXIST, shapes unknown until sniffed).
-  mePath: '/api/me',
-  ladderPath: '/api/ladder',
-  // The one live wire: queue + (probably) battle multiplex (KNOWN TO EXIST,
-  // origin-guarded; message vocabulary discovered at runtime, see sniff.js).
-  queuePath: '/api/queue',
-  // Roster submit candidates, tried in order until one is not 404.
-  // Each entry: [method, path, body(formatId, packedTeam, exportText)].
-  // The server answers validation errors as JSON, which the logs surface.
-  rosterAttempts: [
-    ['POST', '/api/me', (f, packed) => ({formatId: f, team: packed})],
-    ['PATCH', '/api/me', (f, packed) => ({formatId: f, team: packed})],
-    ['PUT', '/api/me', (f, packed) => ({formatId: f, team: packed})],
-    ['POST', '/api/me', (f, _p, exp) => ({formatId: f, team: exp})],
-    ['POST', '/api/me', (_f, packed) => ({team: packed})],
-  ],
-  // Queue state via plain HTTP (works only if the route also serves GET).
-  queueStateAttempts: [
-    ['GET', '/api/queue', () => undefined],
-  ],
-  // Queue join/leave if they turn out to be HTTP rather than socket messages.
-  queueJoinAttempts: [
-    ['POST', '/api/queue', () => ({action: 'join'})],
-    ['POST', '/api/queue', () => ({type: 'join'})],
-  ],
-  queueLeaveAttempts: [
-    ['POST', '/api/queue', () => ({action: 'leave'})],
-    ['POST', '/api/queue', () => ({type: 'leave'})],
-  ],
-  // Seat accept if it turns out to be HTTP rather than a socket message.
-  acceptAttempts: [
-    ['POST', '/api/queue', () => ({action: 'accept'})],
-    ['POST', '/api/queue', () => ({type: 'accept'})],
-  ],
-  // Candidate hello/join messages for the queue socket (sniff.js --probe sends
-  // these one at a time; the live client sends the join pair on connect).
-  queueHello: [
-    {type: 'join'},
-    {action: 'join'},
-  ],
-  queueLeave: {type: 'leave'},
-  queueAccept: [
-    {type: 'accept'},
-    {action: 'accept'},
-  ],
-  // Auth: the rCTF session cookie copied from the browser (KOTH_COOKIE), or a
-  // bearer token (KOTH_TOKEN) if the deployment issues one. Sent as Cookie on
-  // WS and as both Cookie + Authorization on HTTP.
-  authHeaders: (token, cookie) => {
-    const h = {};
-    if (cookie) h.Cookie = cookie;
-    else if (token) h.Cookie = `token=${token}`;
-    if (token) h.Authorization = `Bearer ${token}`;
-    return h;
-  },
-};
+// Choice canonicalization (bot PS-style -> KOTH wire format)
 // ---------------------------------------------------------------------------
 
-const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+// "team 1, 2, 3" -> "team 123"; "move 1 2" -> "move 1 +2"; everything else
+// (switch/pass/tera suffixes) passes through untouched.
+export function canonicalizeChoice(s) {
+  const team = /^\s*team\s+([\d,\s]+)\s*$/.exec(s);
+  if (team) return `team ${team[1].replace(/\D/g, '')}`;
+  return String(s).split(',').map(part => {
+    const p = part.trim();
+    const m = /^move (\d+)\s+([+-]?\d+)(.*)$/.exec(p);
+    if (m) {
+      const loc = parseInt(m[2], 10);
+      return `move ${m[1]} ${loc > 0 ? `+${loc}` : loc}${m[3]}`;
+    }
+    return p;
+  }).join(', ');
+}
+
+// Strip unproven gimmick suffixes after a server {type:"error"}.
+// "terastallize" is proven (the web client sends it) and is kept by default.
+export function stripGimmicks(s, keep = ['terastallize']) {
+  return String(s).split(',').map(part => {
+    let p = part.trim();
+    for (const g of ['mega', 'ultra', 'zmove', 'dynamax', 'terastallize']) {
+      if (keep.includes(g)) continue;
+      p = p.replace(new RegExp(`\\s+${g}$`), '');
+    }
+    return p;
+  }).join(', ');
+}
+
+// ---------------------------------------------------------------------------
+// HTTP
+// ---------------------------------------------------------------------------
+
+export class KothError extends Error {
+  constructor(status, error, problems = []) {
+    super(`${error} (http ${status})`);
+    this.status = status;
+    this.error = error;
+    this.problems = problems;
+  }
+}
 
 export class KothHttp {
-  constructor(server, token, cookie = '') {
+  constructor(server, cookie) {
     this.server = server.replace(/\/$/, '');
-    this.token = token;
     this.cookie = cookie;
   }
   headers() {
     return {
       'Content-Type': 'application/json',
-      Origin: this.server, // /api/queue (and maybe others) demand this
-      ...PROTOCOL.authHeaders(this.token, this.cookie),
+      Origin: this.server, // required: the server gates on Origin
+      Cookie: this.cookie,
     };
   }
-  async req(method, path, body) {
+  async req(method, path, body, {signal} = {}) {
     const res = await fetch(this.server + path, {
       method,
       headers: this.headers(),
       body: body === undefined ? undefined : JSON.stringify(body),
+      signal,
     });
-    const text = await res.text();
     let json = null;
-    try { json = JSON.parse(text); } catch { /* non-json */ }
-    return {status: res.status, json, text};
-  }
-  async tryAttempts(attempts, ...args) {
-    let last = null;
-    for (const [method, path, bodyFn] of attempts) {
-      last = await this.req(method, path, bodyFn(...args));
-      if (last.status !== 404) return {path, method, ...last};
+    try { json = await res.json(); } catch { /* non-json */ }
+    if (!res.ok) {
+      const err = (json && typeof json.error === 'string') ? json.error : `request_failed`;
+      const problems = (json && Array.isArray(json.problems))
+        ? json.problems.filter(p => typeof p === 'string') : [];
+      throw new KothError(res.status, err, problems);
     }
-    const [method, path] = attempts[attempts.length - 1];
-    return {path, method, ...last};
+    return json;
   }
-  fetchConfig() { return this.req('GET', PROTOCOL.configPath); }
-  fetchMe() { return this.req('GET', PROTOCOL.mePath); }
-  fetchLadder() { return this.req('GET', PROTOCOL.ladderPath); }
-  queueState() { return this.tryAttempts(PROTOCOL.queueStateAttempts); }
-  setRoster(formatId) {
-    return this.tryAttempts(PROTOCOL.rosterAttempts, formatId, getPackedTeam(formatId), getBattleExport(formatId));
-  }
-  joinQueue() { return this.tryAttempts(PROTOCOL.queueJoinAttempts); }
-  leaveQueue() { return this.tryAttempts(PROTOCOL.queueLeaveAttempts); }
-  acceptBattle() { return this.tryAttempts(PROTOCOL.acceptAttempts); }
+  config() { return this.req('GET', '/api/config'); }
+  me() { return this.req('GET', '/api/me'); }
+  queueState() { return this.req('GET', '/api/queue'); }
+  saveTeam(exportText) { return this.req('PUT', '/api/team', {exportText}); }
+  joinQueue() { return this.req('POST', '/api/queue'); }
+  leaveQueue() { return this.req('DELETE', '/api/queue'); }
+  acceptMatch(id) { return this.req('POST', `/api/matches/${encodeURIComponent(id)}/accept`); }
+  rejectMatch(id) { return this.req('POST', `/api/matches/${encodeURIComponent(id)}/reject`); }
+  matchSnapshot(id, opts) { return this.req('GET', `/api/matches/${encodeURIComponent(id)}`, undefined, opts); }
+  ladder() { return this.req('GET', '/api/ladder'); }
+  logout() { return this.req('POST', '/auth/logout'); }
 }
 
 // ---------------------------------------------------------------------------
-// Showdown-protocol battle session over one WebSocket.
-// `sendRaw(text)` writes client->server; server frames are fed to `onServer()`
-// as full strings (room prefix + payload). Resolves with 'win' | 'loss' | 'tie'.
+// Showdown-protocol battle session (transport-agnostic).
+// Server frames are fed to `onServer()` as full strings; choices leave via
+// `emit()` (wired by the owner). Resolves with 'win' | 'loss' | 'tie'.
 // ---------------------------------------------------------------------------
 export class BattleSession {
   constructor({formatId, mySide = null, log = () => {}} = {}) {
@@ -171,10 +178,8 @@ export class BattleSession {
     this.resultPromise = new Promise(r => { this._resolve = r; });
   }
 
-  // -- incoming -------------------------------------------------------------
   onServer(frame) {
     if (this.done) return;
-    // Split `>room\npayload` frames; payload may itself be multiline.
     let room = null;
     let payload = frame;
     if (frame.startsWith('>')) {
@@ -192,14 +197,12 @@ export class BattleSession {
   }
 
   onChunk(chunk) {
-    // Win / tie ends the session.
     const win = /\|win\|([^\n|]*)/.exec(chunk) || /\|tie\|([^\n]*)/.exec(chunk);
     if (win) {
       const who = (win[1] || '').trim().toLowerCase();
       let result = 'tie';
       if (/\|win\|/.test(chunk)) {
         const myName = (this.myName || '').trim().toLowerCase();
-        // |win| carries the winner's player name; fall back to side number.
         const iWon = myName
           ? (who === myName || who.includes(myName))
           : this.mySide
@@ -212,14 +215,12 @@ export class BattleSession {
     const tm = /\|turn\|(\d+)/.exec(chunk);
     if (tm) this.turns = Math.max(this.turns, parseInt(tm[1], 10));
 
-    // Detect our side from |player|pX|name (our name set via setIdentity).
     const pl = /\|player\|(p[12])\|([^\n|]*)/.exec(chunk);
     if (pl && this.myName && pl[2].trim() === this.myName) {
       this.mySide = pl[1];
       if (!this.tracker) this.tracker = new Tracker(this.mySide);
     }
 
-    // Choice error: NO new request follows; re-decide the SAME request.
     if (chunk.startsWith('|error|')) {
       this.errors++;
       const m = /\[Invalid choice\][^\n]*/.exec(chunk);
@@ -229,7 +230,6 @@ export class BattleSession {
       return;
     }
 
-    // Request (may be glued after log lines in one chunk: split on |request|).
     const ri = chunk.indexOf('|request|');
     if (ri >= 0) {
       const logPart = chunk.slice(0, ri);
@@ -247,7 +247,6 @@ export class BattleSession {
       return;
     }
 
-    // Plain battle log.
     if (this.tracker && chunk.startsWith('|')) this.tracker.feed(chunk + '\n');
   }
 
@@ -255,7 +254,6 @@ export class BattleSession {
     this.myName = name;
   }
 
-  // -- outgoing ---------------------------------------------------------------
   answer(req, isRetry) {
     if (this.done || !req) return;
     if (!this.tracker && this.mySide) this.tracker = new Tracker(this.mySide);
@@ -267,7 +265,6 @@ export class BattleSession {
       dec = {choiceString: 'default'};
     }
     if (!dec.choiceString) return; // wait-request: send nothing
-    // Our AI never emits `default` except as a last resort; the sim resolves it.
     this.ai.lastChoice = dec.choiceString;
     this.send(`/choose ${dec.choiceString}`);
   }
@@ -278,7 +275,6 @@ export class BattleSession {
     else this.emit(text);
   }
 
-  // Wired by the owner to ws.send().
   emit(text) {
     if (this._emit) this._emit(text);
   }
@@ -292,262 +288,411 @@ export class BattleSession {
 }
 
 // ---------------------------------------------------------------------------
-// Message classification for the queue socket. Returns one of:
-//   {kind:'battle', text}      Showdown battle frame (room-prefixed or |...|)
-//   {kind:'json', msg}         parsed JSON lobby message
-//   {kind:'text', text}        anything else (log + stash)
+// KOTH battle adapter: snapshots in, {type:"choose"} out.
+// `send(choice, requestId)` is wired by the owner to the socket. It must
+// return false ONLY when the payload definitely did not go out (dead socket);
+// any other return value (including undefined) counts the request as answered,
+// which is what lets a re-delivered snapshot re-trigger a lost send.
 // ---------------------------------------------------------------------------
-export function classifyServerFrame(frame) {
-  if (/^>battle-/.test(frame)) return {kind: 'battle', text: frame};
-  if (frame.startsWith('|')) return {kind: 'battle', text: frame};
-  const trimmed = frame.trim();
-  if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
-    try {
-      return {kind: 'json', msg: JSON.parse(trimmed), text: frame};
-    } catch { /* fall through to text */ }
-  }
-  // Some servers wrap PS frames in JSON: {room, data} or {type:'battle', ...}.
-  return {kind: 'text', text: frame};
-}
-
-// Heuristic: does this JSON lobby message describe a battle seat?
-// Looks for room/battle ids, side assignments, accept prompts. Returns a seat
-// object {room, side?, acceptIn?, raw} or null.
-export function extractSeat(msg) {
-  if (!msg || typeof msg !== 'object') return null;
-  const blob = JSON.stringify(msg).toLowerCase();
-  const hasRoom = msg.room || msg.battleId || msg.battle || msg.roomId;
-  const hasSide = msg.side === 'p1' || msg.side === 'p2' || msg.player;
-  const wantsAccept = /accept|confirm|ready|seat|match|opponent|battle/.test(blob);
-  if (hasRoom || (hasSide && wantsAccept) || (wantsAccept && msg.format)) {
-    return {
-      room: msg.room || msg.roomId || (msg.battleId ? `battle-${msg.battleId}` : msg.battle) || null,
-      side: msg.side || null,
-      acceptIn: msg.acceptIn || msg.acceptSeconds || null,
-      raw: msg,
+export class KothBattle {
+  constructor({formatId, mySide, myName, send, log = () => {}}) {
+    this.session = new BattleSession({formatId, mySide, log});
+    this.session.setIdentity(myName);
+    this.log = log;
+    this._send = send;
+    this.session._emit = (text) => {
+      const m = /\/choose (.+)$/s.exec(text);
+      if (!m) return; // drop non-choices (e.g. /timer)
+      this.sendChoice(m[1]);
     };
+    this.fedLines = 0;        // absolute log lines fed to the session so far
+    this.lastRequestId = null;
+    this.lastReqWasWait = false;
+    this.answeredRequestId = null;
+    this.strippedFor = new Set(); // requestIds already retried gimmick-free
+    this.done = false;
+    this.result = null;
+    this._resolve = null;
+    this.resultPromise = new Promise(r => { this._resolve = r; });
   }
-  return null;
+
+  sendChoice(choice) {
+    if (this.done || this.lastRequestId === null) return;
+    this.session.ai.lastChoice = choice;
+    if (this._send(canonicalizeChoice(choice), this.lastRequestId) !== false) {
+      this.answeredRequestId = this.lastRequestId;
+    }
+  }
+
+  // Feed one {type:"snapshot"}. Returns 'done' | 'new-request' | 'waiting'.
+  onSnapshot(snap) {
+    if (this.done) return 'done';
+    if (snap.status === 'done') {
+      // Drain any trailing log first (turn counts, tracker state).
+      this.feedLog(snap);
+      let result = 'tie';
+      if (snap.result && snap.result.winner) {
+        const w = snap.result.winner;
+        // Envelope authority wins over the log. Anything that is neither our
+        // side nor a concrete p1/p2 ('draw', 'tie', ...) counts as a tie.
+        result = w === snap.you ? 'win' : (w === 'p1' || w === 'p2') ? 'loss' : 'tie';
+      }
+      if (snap.result) {
+        this.log(`result: winner=${snap.result.winner} reason=${snap.result.endReason} eloAfter=${snap.result.eloAfter}`);
+      }
+      this.finish(result);
+      return 'done';
+    }
+    this.feedLog(snap);
+    if (this.session.done) {
+      // The log already contained |win|/|tie| (belt and braces).
+      this.finish('tie');
+      return 'done';
+    }
+    const req = snap.request;
+    // New decision point: unseen requestId; OR a wait->real transition reusing
+    // the same id; OR a re-delivered pre-submission snapshot for a request we
+    // never managed to answer (a socket drop between snapshots can lose our
+    // send while the server keeps waiting on us — answering again is the only
+    // way out).
+    const isNew = req && snap.requestId !== this.lastRequestId;
+    const waitToReal = req && !req.wait && snap.requestId === this.lastRequestId && this.lastReqWasWait;
+    const unanswered = req && !req.wait && snap.requestId !== this.answeredRequestId;
+    if (req && !snap.choiceSubmitted && (isNew || waitToReal || unanswered)) {
+      this.lastRequestId = snap.requestId;
+      this.lastReqWasWait = !!req.wait;
+      this.session.onChunk(`|request|${JSON.stringify(req)}`);
+      return 'new-request';
+    }
+    if (req) this.lastReqWasWait = !!req.wait;
+    return 'waiting';
+  }
+
+  feedLog(snap) {
+    const start = snap.logOffset || 0;
+    const lines = snap.log || [];
+    const fresh = lines.slice(Math.max(0, this.fedLines - start));
+    for (const line of fresh) {
+      if (!line || line.includes('|request|')) continue;
+      this.session.onChunk(line);
+      if (this.session.done) break;
+    }
+    this.fedLines = start + lines.length;
+  }
+
+  // Feed one {type:"error", error} from the socket.
+  onErrorMessage(msg) {
+    if (this.done) return;
+    const last = this.session.ai.lastChoice || '';
+    // First error for this request with an unproven gimmick: strip and resend
+    // the same request immediately (the AI genuinely wants mega/z/dyna, but
+    // the server may only speak the web client's vocabulary).
+    if (/ (mega|ultra|zmove|dynamax)(,|$)/.test(` ${last}`) && !this.strippedFor.has(this.lastRequestId)) {
+      this.strippedFor.add(this.lastRequestId);
+      const stripped = stripGimmicks(last);
+      this.log(`stripping gimmick after server error, resending: ${stripped}`);
+      this.sendChoice(stripped);
+      return;
+    }
+    this.session.onChunk(`|error|[Invalid choice] ${msg}`);
+  }
+
+  finish(result) {
+    if (this.done) return;
+    this.done = true;
+    this.result = result;
+    this.session.finish(result);
+    if (this._resolve) this._resolve(result);
+  }
 }
 
 // ---------------------------------------------------------------------------
-// High-level client: config -> roster -> queue socket -> battle loop.
-// The queue socket is multiplexed: battle frames go to a BattleSession, JSON
-// lobby messages go to seat/accept handling, everything is transcript-logged.
+// High-level client: config -> roster -> queue -> accept -> battle -> requeue.
+// Mirrors the web client's lobby loop (Le): GET /api/me + GET /api/queue in
+// parallel every 1.5s, queue state authoritative for occupancy/match.
 // ---------------------------------------------------------------------------
 export class KothClient {
-  constructor({server, token, cookie = '', log = console.log}) {
+  constructor({server, cookie, log = console.log}) {
     this.server = server.replace(/\/$/, '');
-    this.token = token;
-    this.cookie = cookie || process.env.KOTH_COOKIE || '';
-    this.http = new KothHttp(this.server, token, this.cookie);
+    this.http = new KothHttp(this.server, cookie);
     this.log = log;
-    this.formatId = null;
     this.config = null;
-    this.myName = null;
+    this.me = null;
+    this.queue = null;
+    this.sessionFormat = null; // format locked in for the current queue/battle
     this.stopped = false;
-    this.qws = null;         // live queue socket (shared with battles)
-    this.transcript = [];    // last ~200 server frames (for protocol forensics)
-    this.session = null;     // active BattleSession, if any
   }
 
-  // -- setup ----------------------------------------------------------------
-  async refreshConfig() {
-    const {status, json} = await this.http.fetchConfig();
-    if (status !== 200 || !json || !json.formatId) {
-      throw new Error(`config fetch failed (http ${status})`);
+  get match() {
+    return (this.queue && this.queue.match) || null;
+  }
+
+  get occupancy() {
+    return (this.queue && this.queue.occupancy) || (this.me && this.me.occupancy) || 'idle';
+  }
+
+  async boot() {
+    this.config = await this.http.config();
+    this.log(`config: format=${this.config.formatId} (${this.config.formatName}) ` +
+      `accept=${this.config.acceptSeconds}s turn=${this.config.turnSeconds}s ` +
+      `reconnect=${this.config.reconnectSeconds}s eloStart=${this.config.eloStart}`);
+    await this.refresh();
+    return this.config;
+  }
+
+  // Mirror of the web client's Le(): parallel me+queue refresh; detects
+  // operator format switches (roster wipe) via me.formatId.
+  async refresh() {
+    const [me, q] = await Promise.all([this.http.me(), this.http.queueState()]);
+    me.occupancy = q.occupancy;
+    me.queue = q;
+    const prevFormat = this.me ? this.me.formatId : null;
+    this.me = me;
+    this.queue = q;
+    if (this.config && me.formatId && me.formatId !== this.config.formatId) {
+      this.log(`FORMAT SWITCH: ${this.config.formatId} -> ${me.formatId} (${me.formatName}); rosters wiped`);
+      this.config = {...this.config, formatId: me.formatId, formatName: me.formatName};
+    } else if (prevFormat && me.formatId !== prevFormat) {
+      this.log(`format now ${me.formatId} (was ${prevFormat})`);
     }
-    const changed = this.config && this.config.formatId !== json.formatId;
-    this.config = json;
-    this.formatId = json.formatId;
-    if (changed) this.log(`format changed -> ${this.formatId} (rosters wiped, resubmitting)`);
-    return json;
+    return me;
   }
 
-  async identify() {
-    const {status, json, text} = await this.http.fetchMe();
-    if (status >= 200 && status < 300 && json) {
-      this.myName = json.name || json.username || json.team || null;
-      this.log(`/api/me: ${JSON.stringify(json).slice(0, 300)}`);
-      return json;
-    }
-    this.log(`/api/me -> http ${status}: ${(text || '').slice(0, 200)}`);
-    return null;
-  }
-
+  // Ensure a legal roster is saved for the current format. Leaves queue/match
+  // first if needed (roster is locked unless idle). Returns true on success.
   async ensureRoster() {
-    const {path, method, status, json, text} = await this.http.setRoster(this.formatId);
-    if (status >= 200 && status < 300) {
-      this.log(`roster accepted for ${this.formatId} via ${method} ${path}`);
+    await this.refresh();
+    const fmt = this.config.formatId;
+    if (this.me.hasTeam && this.me.formatId === fmt) {
+      this.sessionFormat = fmt;
       return true;
     }
-    this.log(`roster submit failed (${method} ${path} -> http ${status}): ${(text || '').slice(0, 200)}`);
-    if (json && json.error) this.log(`server says: ${JSON.stringify(json.error).slice(0, 300)}`);
-    return false;
+    if (this.occupancy !== 'idle') {
+      this.log(`leaving ${this.occupancy} to (re)submit roster`);
+      await this.http.leaveQueue().catch(() => {});
+      await this.refresh();
+    }
+    const maxSize = this.me.maxTeamSize ?? this.config.maxTeamSize ?? 6;
+    const want = Math.max(1, Math.min(6, maxSize));
+    const text = getRosterExport(fmt, want);
+    this.log(`saving roster for ${fmt} (${want} mons)`);
+    try {
+      const res = await this.http.saveTeam(text);
+      this.log(`roster saved (${(res.exportText || '').length} chars echoed)`);
+    } catch (e) {
+      this.log(`roster rejected: ${e.error} (http ${e.status})`);
+      for (const p of e.problems || []) this.log(`  - ${p}`);
+      // If the server complains about size, retry once at its maxTeamSize.
+      if (/team.*size|too many|too few/i.test([e.error, ...(e.problems || [])].join(' ')) && want !== maxSize) {
+        const retry = getRosterExport(fmt, Math.max(1, Math.min(6, maxSize)));
+        this.log(`retrying roster at server maxTeamSize=${maxSize}`);
+        try {
+          await this.http.saveTeam(retry);
+          this.log('roster saved on retry');
+        } catch (e2) {
+          this.log(`roster rejected again: ${e2.error}`);
+          for (const p of e2.problems || []) this.log(`  - ${p}`);
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+    await this.refresh();
+    if (!this.me.hasTeam || this.me.formatId !== fmt) {
+      this.log('roster save did not stick (hasTeam/format mismatch)');
+      return false;
+    }
+    this.sessionFormat = fmt;
+    return true;
   }
 
-  wsHeaders() {
-    return {
-      Origin: this.server, // required: server gates /api/queue on Origin
-      ...PROTOCOL.authHeaders(this.token, this.cookie),
-    };
+  // Join the queue if idle, then poll until a match reaches pending_connect /
+  // active, accepting instantly while it is accepting. Resolves with the
+  // match {id, you, ...}. Returns null when stopped.
+  async joinAndAccept({pollMs = 1500} = {}) {
+    for (;;) {
+      if (this.stopped) return null;
+      try {
+        await this.refresh();
+      } catch (e) {
+        this.checkAuth(e);
+        this.log(`lobby poll failed: ${e.message}; retrying`);
+        await sleep(pollMs);
+        continue;
+      }
+      // Format switch or wiped roster mid-queue: resubmit first.
+      if (!this.me.hasTeam || this.me.formatId !== this.config.formatId) {
+        this.log('roster missing/stale in queue loop; resubmitting');
+        if (!await this.ensureRoster()) {
+          await sleep(pollMs);
+          continue;
+        }
+      }
+      const m = this.match;
+      if (!m) {
+        if (this.occupancy === 'idle') {
+          this.log('joining queue');
+          try {
+            await this.http.joinQueue();
+          } catch (e) {
+            this.checkAuth(e);
+            this.log(`queue join failed: ${e.message}`);
+          }
+        } else {
+          this.log(`in queue (${this.occupancy})`);
+        }
+        await sleep(pollMs);
+        continue;
+      }
+      if (m.status === 'accepting') {
+        if (!m.accepted) {
+          this.log(`match ${m.id} vs ${m.opponent}: accepting`);
+          try {
+            await this.http.acceptMatch(m.id);
+          } catch (e) {
+            this.checkAuth(e);
+            this.log(`accept failed: ${e.message}`);
+          }
+        } else {
+          this.log(`accepted; waiting on ${m.opponent} (opponentAccepted=${m.opponentAccepted})`);
+        }
+        await sleep(500); // tight loop inside the accept window
+        continue;
+      }
+      if (m.status === 'pending_connect' || m.status === 'active') {
+        this.log(`match ${m.id} ${m.status} vs ${m.opponent} (we are ${m.you})`);
+        return m;
+      }
+      // done/cancelled/expired: loop around (refresh will show idle/queued).
+      this.log(`match ${m.id} went ${m.status}; requeueing`);
+      await sleep(pollMs);
+    }
   }
 
-  queueWsUrl() {
-    return this.server.replace(/^http/, 'ws') + PROTOCOL.queuePath;
-  }
-
-  stash(dir, frame) {
-    this.transcript.push(`${dir} ${String(frame).slice(0, 500)}`);
-    if (this.transcript.length > 200) this.transcript.shift();
-  }
-
-  dumpTranscript() {
-    return this.transcript.join('\n');
-  }
-
-  // -- queue socket -----------------------------------------------------------
-  // Opens the queue socket, announces presence, and resolves with a seat once
-  // the server deals one: {room, side?, ws(shared), shared:true}.
-  // Rejects if the socket closes/errors before a seat arrives.
-  async findSeat() {
-    const url = this.queueWsUrl();
-    this.log(`opening queue socket ${url}`);
-    const ws = new WebSocket(url, {headers: this.wsHeaders()});
-    this.qws = ws;
-    this.session = null;
+  // Play one match to completion. Mirrors the web battle screen (Mu):
+  // snapshot GET, then WS; on socket drop, re-GET and reconnect with backoff.
+  // Resolves 'win' | 'loss' | 'tie' | 'cancelled'.
+  async playMatch(match) {
+    const id = match.id;
+    let snap;
+    try {
+      snap = await this.http.matchSnapshot(id);
+    } catch (e) {
+      if (e.status === 409) {
+        this.log('match snapshot 409 (cancelled or needs acceptance); requeueing');
+        return 'cancelled';
+      }
+      throw e;
+    }
+    const formatId = this.sessionFormat || this.config.formatId;
+    const wsUrl = `${this.server.replace(/^http/, 'ws')}/ws/battle/${encodeURIComponent(id)}`;
+    this.log(`opening battle socket ${wsUrl} as ${snap.you || match.you}`);
 
     return new Promise((resolve, reject) => {
-      let settled = false;
-      const done = (fn, arg) => { if (!settled) { settled = true; fn(arg); } };
-      ws.on('open', () => {
-        this.log('queue socket open, sending join hello');
-        for (const hello of PROTOCOL.queueHello) {
-          const text = JSON.stringify(hello);
-          this.stash('C>', text);
-          ws.send(text);
-        }
-      });
-      ws.on('message', (data) => {
-        const frame = String(data);
-        this.stash('S>', frame);
-        const cls = classifyServerFrame(frame);
-        if (cls.kind === 'battle') {
-          // Battle traffic on the queue socket: a seat by definition.
-          if (!this.session) {
-            this.log(`battle traffic on queue socket (${frame.slice(0, 80)}…)`);
-            done(resolve, {room: null, side: null, ws, shared: true});
-          } else {
-            this.session.onServer(cls.text);
+      let ws = null;
+      let closed = false;
+      let backoffFails = 0;
+      const battle = new KothBattle({
+        formatId,
+        mySide: snap.you || match.you,
+        myName: this.me.name,
+        send: (choice, requestId) => {
+          if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({type: 'choose', choice, requestId}));
+            return true;
           }
-          return;
-        }
-        if (cls.kind === 'json') {
-          const seat = extractSeat(cls.msg);
-          this.log(`[lobby] ${frame.slice(0, 250)}`);
-          if (seat) {
-            this.log(`seat detected: ${JSON.stringify({...seat, raw: undefined})}`);
-            done(resolve, {...seat, ws, shared: true});
+          this.log('choice dropped: socket not open');
+          return false;
+        },
+        log: (m) => this.log(`[battle] ${m}`),
+      });
+      battle.resultPromise.then((r) => {
+        closed = true;
+        try { if (ws) ws.close(); } catch { /* ignore */ }
+        resolve(r);
+      });
+
+      const onSnapshotMsg = (s) => {
+        backoffFails = 0;
+        const st = battle.onSnapshot(s);
+        if (st === 'new-request') this.log(`[battle] answered request ${s.requestId}`);
+      };
+
+      const openSocket = () => {
+        if (closed || this.stopped) return;
+        this.log('[battle] connecting socket');
+        ws = new WebSocket(wsUrl, {
+          headers: {Origin: this.server, Cookie: this.http.cookie},
+        });
+        ws.on('open', () => this.log('[battle] socket open'));
+        ws.on('message', (data) => {
+          let msg;
+          try {
+            msg = JSON.parse(String(data));
+          } catch (e) {
+            this.log(`[battle] bad socket JSON: ${e.message}`);
+            return;
           }
-          return;
-        }
-        this.log(`[lobby] ${frame.slice(0, 250)}`);
-      });
-      ws.on('close', (code, reason) => {
-        this.log(`queue socket closed (${code} ${String(reason).slice(0, 120)})`);
-        this.qws = null;
-        done(reject, new Error(`queue socket closed before seat (${code})`));
-      });
-      ws.on('error', (e) => {
-        this.log(`queue socket error: ${e.message}`);
-        done(reject, e);
-      });
+          if (msg && msg.type === 'error') {
+            this.log(`[battle] server error: ${msg.error}`);
+            battle.onErrorMessage(msg.error);
+            return;
+          }
+          onSnapshotMsg(msg);
+        });
+        ws.on('error', (e) => this.log(`[battle] socket error: ${e.message}`));
+        ws.on('close', () => {
+          ws = null;
+          if (closed || battle.done) return;
+          this.resync(openSocket, battle, onSnapshotMsg, id, () => closed)
+            .catch((e) => {
+              if (!closed) {
+                closed = true;
+                reject(e);
+              }
+            });
+        });
+      };
+
+      // Prime from the HTTP snapshot, then connect (browser order: GET, then WS).
+      onSnapshotMsg(snap);
+      if (battle.done) return; // already decided (e.g. walkover)
+      openSocket();
     });
   }
 
-  // Accept a seat: socket messages first (shared queue socket), then HTTP.
-  async acceptSeat(seat) {
-    const ws = (seat && seat.ws) || this.qws;
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      for (const a of PROTOCOL.queueAccept) {
-        const text = JSON.stringify(seat && seat.room ? {...a, room: seat.room} : a);
-        this.stash('C>', text);
-        ws.send(text);
-      }
-      this.log('accept sent on queue socket');
-      return {path: 'ws:/api/queue', status: 101};
-    }
-    const r = await this.http.acceptBattle();
-    this.log(`accept: ${r.path} -> http ${r.status}`);
-    return r;
-  }
-
-  connectBattleWs(wsUrl) {
-    // Battles normally arrive on the shared queue socket (wsUrl null).
-    // A separate battle URL is supported in case the seat carries one.
-    if (!wsUrl) return this.qws;
-    return new WebSocket(wsUrl, {headers: this.wsHeaders()});
-  }
-
-  // Play one battle on a socket (shared queue socket or a dedicated one).
-  // Resolves 'win'|'loss'|'tie'.
-  playBattle(ws, roomHint = null) {
-    if (!ws) throw new Error('playBattle: no socket (queue socket died?)');
-    const session = new BattleSession({
-      formatId: this.formatId,
-      log: (m) => this.log(`[battle] ${m}`),
-    });
-    this.session = session;
-    if (this.myName) session.setIdentity(this.myName);
-    if (roomHint) session.room = roomHint;
-    session._emit = (text) => {
-      if (ws.readyState === WebSocket.OPEN) {
-        this.stash('C>', text);
-        ws.send(text);
-      }
-    };
-    const onMessage = (data) => {
-      const frame = String(data);
-      this.stash('S>', frame);
-      const cls = classifyServerFrame(frame);
-      if (cls.kind === 'battle') {
-        session.onServer(cls.text);
-        return;
-      }
-      // Lobby chatter during battle: surface, and track requeue prompts.
-      this.log(`[lobby] ${frame.slice(0, 200)}`);
-    };
-    ws.on('message', onMessage);
-    const cleanup = () => ws.off('message', onMessage);
-    session.resultPromise.then(cleanup, cleanup);
-    const armTimer = () => {
+  // Re-sync after a socket drop: re-GET the snapshot (source of truth), then
+  // reconnect with 500ms * 2^fails backoff capped at 5s (browser behavior).
+  // Gives up after 10 consecutive failures (~35s, past the 30s grace).
+  async resync(reopen, battle, onSnapshotMsg, id, isClosed) {
+    for (;;) {
+      if (isClosed() || battle.done || this.stopped) return;
       try {
-        if (ws.readyState === WebSocket.OPEN) {
-          if (roomHint) ws.send(`${roomHint}|/timer on`);
-          else session.send('/timer on');
-        }
-      } catch { /* ignore */ }
-    };
-    if (ws.readyState === WebSocket.OPEN) armTimer();
-    else ws.once('open', armTimer);
-    ws.once('close', () => session.finish('tie'));
-    ws.once('error', (e) => this.log(`[battle] ws error: ${e.message}`));
-    return session.resultPromise;
+        const snap = await this.http.matchSnapshot(id);
+        onSnapshotMsg(snap);
+        if (battle.done) return;
+        reopen();
+        return;
+      } catch (e) {
+        this.checkAuth(e);
+        this.log(`[battle] resync failed: ${e.message}`);
+      }
+      battle._resyncFails = (battle._resyncFails || 0) + 1;
+      if (battle._resyncFails >= 10) throw new Error('resync gave up after 10 failures');
+      const wait = Math.min(500 * 2 ** Math.min(battle._resyncFails, 4), 5000);
+      this.log(`[battle] reconnecting in ${Math.ceil(wait / 1000)}s`);
+      await sleep(wait);
+    }
   }
 
-  leaveQueue() {
-    const ws = this.qws;
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      const text = JSON.stringify(PROTOCOL.queueLeave);
-      this.stash('C>', text);
-      try { ws.send(text); } catch { /* ignore */ }
+  checkAuth(e) {
+    if (e && (e.status === 401 || e.error === 'invalid_session' || e.error === 'banned')) {
+      throw new KothError(e.status || 401, e.error || 'invalid_session', ['auth lost; re-sign-in and refresh KOTH_COOKIE']);
     }
-    return this.http.leaveQueue().catch(() => null);
   }
 
   stop() {
     this.stopped = true;
-    try { if (this.qws) this.qws.close(); } catch { /* ignore */ }
-    this.qws = null;
   }
 }
