@@ -1,0 +1,11 @@
+TW-071 / application export
+Collected: 2026-07-09T08:36:05Z
+
+TypeWriter 2.6.1, Locker 1.8. The requested document is review.locker.
+The profile copy includes the journal present at collection. No subsequent
+application launch was performed. Locker's rendering cache was collected
+separately; its process memory was not acquired.
+
+This case uses synthetic application activity. The DMP is a fixture with
+selected TypeWriter memory ranges, not a full workstation memory image.
+The included program files can be inspected without running them.
