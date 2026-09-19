@@ -1,0 +1,59 @@
+Great Tusk @ Leftovers
+Ability: Protosynthesis
+Tera Type: Steel
+EVs: 252 HP / 4 Atk / 252 Def
+Impish Nature
+- Precipice Blades
+- Ice Spinner
+- Rapid Spin
+- Stealth Rock
+
+Gholdengo @ Choice Specs
+Ability: Good as Gold
+Tera Type: Steel
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Moongeist Beam
+- Make It Rain
+- Focus Blast
+- Trick
+
+Dragapult @ Choice Specs
+Ability: Infiltrator
+Tera Type: Ghost
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Draco Meteor
+- Moongeist Beam
+- U-turn
+- Flamethrower
+
+Kingambit @ Leftovers
+Ability: Supreme Overlord
+Tera Type: Flying
+EVs: 252 Atk / 4 SpD / 252 Spe
+Adamant Nature
+- Wicked Blow
+- Sunsteel Strike
+- Sucker Punch
+- Swords Dance
+
+Gliscor @ Toxic Orb
+Ability: Poison Heal
+Tera Type: Water
+EVs: 252 HP / 184 Def / 72 Spe
+Impish Nature
+- Thousand Arrows
+- Knock Off
+- Protect
+- Toxic
+
+Samurott-Hisui @ Choice Scarf
+Ability: Sharpness
+Tera Type: Water
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Ceaseless Edge
+- Surging Strikes
+- Sacred Sword
+- Flip Turn

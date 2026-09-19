@@ -1,0 +1,54 @@
+Landorus-Therian @ Leftovers
+Ability: Intimidate
+EVs: 252 HP / 164 Def / 92 Spe
+Impish Nature
+- Earthquake
+- U-turn
+- Stealth Rock
+- Toxic
+
+Ferrothorn @ Leftovers
+Ability: Iron Barbs
+EVs: 252 HP / 88 Def / 168 SpD
+Relaxed Nature
+IVs: 0 Spe
+- Power Whip
+- Knock Off
+- Leech Seed
+- Spikes
+
+Toxapex @ Black Sludge
+Ability: Regenerator
+EVs: 252 HP / 252 Def / 4 SpD
+Bold Nature
+- Scald
+- Haze
+- Recover
+- Toxic
+
+Dragapult @ Choice Specs
+Ability: Infiltrator
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Shadow Ball
+- Draco Meteor
+- U-turn
+- Flamethrower
+
+Kartana @ Choice Band
+Ability: Beast Boost
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Leaf Blade
+- Knock Off
+- Sacred Sword
+- Smart Strike
+
+Heatran @ Leftovers
+Ability: Flash Fire
+EVs: 252 HP / 4 Def / 252 SpD
+Calm Nature
+- Lava Plume
+- Toxic
+- Protect
+- Earth Power

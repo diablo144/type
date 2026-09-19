@@ -1,0 +1,35 @@
+Snorlax @ Leftovers
+- Curse
+- Double-Edge
+- Rest
+- Sleep Talk
+
+Raikou @ Leftovers
+- Thunderbolt
+- Crunch
+- Rest
+- Sleep Talk
+
+Zapdos @ Leftovers
+- Thunderbolt
+- Drill Peck
+- Rest
+- Sleep Talk
+
+Skarmory @ Leftovers
+- Drill Peck
+- Whirlwind
+- Rest
+- Sleep Talk
+
+Blissey @ Leftovers
+- Seismic Toss
+- Soft-Boiled
+- Thunder Wave
+- Light Screen
+
+Exeggutor @ Leftovers
+- Psychic
+- Giga Drain
+- Sleep Powder
+- Explosion

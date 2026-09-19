@@ -1,0 +1,59 @@
+Greninja @ Choice Specs
+Ability: Protean
+Tera Type: Water
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Hydro Pump
+- Dark Pulse
+- Ice Beam
+- U-turn
+
+Rotom-Wash @ Leftovers
+Ability: Levitate
+Tera Type: Steel
+EVs: 252 HP / 200 Def / 56 Spe
+Bold Nature
+- Hydro Pump
+- Volt Switch
+- Will-O-Wisp
+- Pain Split
+
+Excadrill @ Choice Scarf
+Ability: Mold Breaker
+Tera Type: Ground
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Earthquake
+- Iron Head
+- Rock Slide
+- Rapid Spin
+
+Slowking @ Heavy-Duty Boots
+Ability: Regenerator
+Tera Type: Water
+EVs: 252 HP / 252 Def / 4 SpD
+Bold Nature
+- Scald
+- Slack Off
+- Chilly Reception
+- Future Sight
+
+Hydreigon @ Choice Specs
+Ability: Levitate
+Tera Type: Dark
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Dark Pulse
+- Draco Meteor
+- Flash Cannon
+- U-turn
+
+Cobalion @ Leftovers
+Ability: Justified
+Tera Type: Steel
+EVs: 252 HP / 4 Atk / 252 Spe
+Jolly Nature
+- Iron Head
+- Close Combat
+- Stealth Rock
+- Thunder Wave

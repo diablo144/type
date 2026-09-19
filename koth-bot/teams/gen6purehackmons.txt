@@ -1,0 +1,55 @@
+Gengar-Mega @ Spooky Plate
+Ability: Wonder Guard
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+IVs: 0 Atk
+- Shell Smash
+- Judgment
+- Secret Sword
+- Oblivion Wing
+
+Kangaskhan-Mega @ Silk Scarf
+Ability: Wonder Guard
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Shell Smash
+- Extreme Speed
+- Earthquake
+- Knock Off
+
+Rayquaza-Mega @ Sky Plate
+Ability: Wonder Guard
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Shell Smash
+- Dragon Ascent
+- Earthquake
+- Extreme Speed
+
+Mewtwo-Mega-X @ Fist Plate
+Ability: Wonder Guard
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Shell Smash
+- Close Combat
+- Knock Off
+- Ice Punch
+
+Kyogre-Primal @ Splash Plate
+Ability: Wonder Guard
+EVs: 252 SpA / 4 SpD / 252 Spe
+Modest Nature
+IVs: 0 Atk
+- Shell Smash
+- Judgment
+- Ice Beam
+- Thunder
+
+Tyranitar-Mega @ Choice Band
+Ability: Mold Breaker
+EVs: 252 Atk / 4 Def / 252 Spe
+Adamant Nature
+- Pursuit
+- Crunch
+- Stone Edge
+- Earthquake

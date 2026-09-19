@@ -1,0 +1,59 @@
+Flutter Mane @ Booster Energy
+Ability: Protosynthesis
+Tera Type: Fairy
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Moonblast
+- Shadow Ball
+- Dazzling Gleam
+- Calm Mind
+
+Chien-Pao @ Life Orb
+Ability: Sword of Ruin
+Tera Type: Dark
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Icicle Crash
+- Crunch
+- Sacred Sword
+- Protect
+
+Dragonite @ Lum Berry
+Ability: Multiscale
+Tera Type: Fire
+EVs: 252 Atk / 4 SpD / 252 Spe
+Adamant Nature
+- Dragon Dance
+- Dragon Claw
+- Earthquake
+- Fire Punch
+
+Mimikyu @ Life Orb
+Ability: Disguise
+Tera Type: Ghost
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Swords Dance
+- Play Rough
+- Shadow Sneak
+- Shadow Claw
+
+Gholdengo @ Choice Scarf
+Ability: Good as Gold
+Tera Type: Steel
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Make It Rain
+- Shadow Ball
+- Focus Blast
+- Trick
+
+Great Tusk @ Booster Energy
+Ability: Protosynthesis
+Tera Type: Ground
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Headlong Rush
+- Ice Spinner
+- Knock Off
+- Rapid Spin

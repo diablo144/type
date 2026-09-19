@@ -1,0 +1,53 @@
+Excadrill @ Choice Scarf
+Ability: Mold Breaker
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Earthquake
+- Iron Head
+- Rock Slide
+- Rapid Spin
+
+Gholdengo @ Choice Specs
+Ability: Good as Gold
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Shadow Ball
+- Make It Rain
+- Focus Blast
+- Trick
+
+Heatran @ Leftovers
+Ability: Flash Fire
+EVs: 252 HP / 4 Def / 252 SpD
+Calm Nature
+- Lava Plume
+- Earth Power
+- Toxic
+- Stealth Rock
+
+Corviknight @ Rocky Helmet
+Ability: Pressure
+EVs: 252 HP / 168 Def / 88 SpD
+Impish Nature
+- Brave Bird
+- U-turn
+- Defog
+- Roost
+
+Scizor-Mega @ Scizorite
+Ability: Technician
+EVs: 248 HP / 16 Atk / 244 SpD
+Impish Nature
+- Swords Dance
+- Bullet Punch
+- Knock Off
+- Roost
+
+Archaludon @ Assault Vest
+Ability: Stamina
+EVs: 252 HP / 252 SpA / 4 SpD
+Modest Nature
+- Electro Shot
+- Draco Meteor
+- Flash Cannon
+- Body Press

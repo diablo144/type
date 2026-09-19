@@ -1,0 +1,56 @@
+Rillaboom @ Assault Vest
+Ability: Grassy Surge
+EVs: 252 HP / 252 Atk / 4 SpD
+Adamant Nature
+- Fake Out
+- Grassy Glide
+- Wood Hammer
+- U-turn
+
+Incineroar @ Sitrus Berry
+Ability: Intimidate
+EVs: 248 HP / 252 Atk / 8 SpD
+Adamant Nature
+- Fake Out
+- Flare Blitz
+- Knock Off
+- Parting Shot
+
+Amoonguss @ Sitrus Berry
+Ability: Regenerator
+EVs: 252 HP / 172 Def / 84 SpD
+Bold Nature
+IVs: 0 Atk
+- Spore
+- Rage Powder
+- Giga Drain
+- Protect
+
+Dragapult @ Life Orb
+Ability: Infiltrator
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Shadow Ball
+- Draco Meteor
+- Thunder Wave
+- Protect
+
+Tapu Fini @ Leftovers
+Ability: Misty Surge
+EVs: 252 HP / 4 SpA / 252 SpD
+Calm Nature
+IVs: 0 Atk
+- Moonblast
+- Muddy Water
+- Calm Mind
+- Protect
+
+Heatran @ Shuca Berry
+Ability: Flash Fire
+EVs: 252 HP / 252 SpA / 4 SpD
+Modest Nature
+IVs: 0 Atk
+- Heat Wave
+- Earth Power
+- Flash Cannon
+- Protect

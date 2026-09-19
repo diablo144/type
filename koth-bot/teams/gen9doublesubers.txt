@@ -1,0 +1,59 @@
+Koraidon @ Life Orb
+Ability: Orichalcum Pulse
+Tera Type: Fire
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Collision Course
+- Flare Blitz
+- Dragon Claw
+- Protect
+
+Miraidon @ Life Orb
+Ability: Hadron Engine
+Tera Type: Electric
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Electro Drift
+- Draco Meteor
+- Dazzling Gleam
+- Protect
+
+Calyrex-Shadow @ Focus Sash
+Ability: As One (Spectrier)
+Tera Type: Ghost
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Astral Barrage
+- Psyshock
+- Nasty Plot
+- Protect
+
+Zacian-Crowned @ Rusted Sword
+Ability: Intrepid Sword
+Tera Type: Fairy
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Behemoth Blade
+- Play Rough
+- Sacred Sword
+- Protect
+
+Flutter Mane @ Booster Energy
+Ability: Protosynthesis
+Tera Type: Fairy
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Moonblast
+- Dazzling Gleam
+- Shadow Ball
+- Protect
+
+Tornadus @ Covert Cloak
+Ability: Prankster
+Tera Type: Flying
+EVs: 252 HP / 4 SpA / 252 Spe
+Timid Nature
+- Tailwind
+- Taunt
+- Bleakwind Storm
+- Protect

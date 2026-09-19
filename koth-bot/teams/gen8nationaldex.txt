@@ -1,0 +1,54 @@
+Landorus-Therian @ Rocky Helmet
+Ability: Intimidate
+EVs: 252 HP / 112 Def / 144 Spe
+Impish Nature
+- Earthquake
+- U-turn
+- Stealth Rock
+- Defog
+
+Ferrothorn @ Leftovers
+Ability: Iron Barbs
+EVs: 252 HP / 88 Def / 168 SpD
+Relaxed Nature
+IVs: 0 Spe
+- Power Whip
+- Knock Off
+- Leech Seed
+- Spikes
+
+Heatran @ Heavy-Duty Boots
+Ability: Flash Fire
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Magma Storm
+- Earth Power
+- Taunt
+- Toxic
+
+Scizor-Mega @ Scizorite
+Ability: Technician
+EVs: 248 HP / 16 Atk / 244 SpD
+Impish Nature
+- Swords Dance
+- Bullet Punch
+- Knock Off
+- Roost
+
+Greninja @ Choice Specs
+Ability: Protean
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Hydro Pump
+- Dark Pulse
+- Ice Beam
+- U-turn
+
+Zapdos @ Heavy-Duty Boots
+Ability: Static
+EVs: 252 HP / 184 Def / 72 Spe
+Bold Nature
+- Discharge
+- Heat Wave
+- Roost
+- Toxic

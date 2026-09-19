@@ -1,0 +1,60 @@
+Greninja @ Life Orb
+Ability: Protean
+Tera Type: Water
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Hydro Pump
+- Dark Pulse
+- Ice Beam
+- Protect
+
+Zapdos @ Sitrus Berry
+Ability: Static
+Tera Type: Electric
+EVs: 248 HP / 8 SpA / 252 Spe
+Timid Nature
+- Discharge
+- Heat Wave
+- Tailwind
+- Protect
+
+Excadrill @ Life Orb
+Ability: Mold Breaker
+Tera Type: Ground
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Earthquake
+- Rock Slide
+- Iron Head
+- Protect
+
+Clefairy @ Eviolite
+Ability: Friend Guard
+Tera Type: Fairy
+EVs: 252 HP / 252 Def / 4 SpD
+Bold Nature
+IVs: 0 Atk
+- Follow Me
+- Helping Hand
+- Moonblast
+- Protect
+
+Hydreigon @ Life Orb
+Ability: Levitate
+Tera Type: Dark
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Dark Pulse
+- Draco Meteor
+- Heat Wave
+- Protect
+
+Cobalion @ Leftovers
+Ability: Justified
+Tera Type: Steel
+EVs: 252 HP / 4 Atk / 252 Spe
+Jolly Nature
+- Iron Head
+- Close Combat
+- Thunder Wave
+- Protect

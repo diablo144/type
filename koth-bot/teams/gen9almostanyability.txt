@@ -1,0 +1,59 @@
+Gholdengo @ Choice Specs
+Ability: Levitate
+Tera Type: Steel
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Shadow Ball
+- Make It Rain
+- Focus Blast
+- Trick
+
+Great Tusk @ Leftovers
+Ability: Regenerator
+Tera Type: Steel
+EVs: 252 HP / 4 Atk / 252 Def
+Impish Nature
+- Headlong Rush
+- Ice Spinner
+- Rapid Spin
+- Stealth Rock
+
+Dragapult @ Choice Specs
+Ability: Adaptability
+Tera Type: Ghost
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Draco Meteor
+- Shadow Ball
+- U-turn
+- Flamethrower
+
+Kingambit @ Leftovers
+Ability: Tough Claws
+Tera Type: Flying
+EVs: 252 Atk / 4 SpD / 252 Spe
+Adamant Nature
+- Kowtow Cleave
+- Iron Head
+- Sucker Punch
+- Swords Dance
+
+Gliscor @ Leftovers
+Ability: Intimidate
+Tera Type: Water
+EVs: 252 HP / 184 Def / 72 Spe
+Impish Nature
+- Earthquake
+- Knock Off
+- Protect
+- Toxic
+
+Samurott-Hisui @ Choice Scarf
+Ability: Moxie
+Tera Type: Water
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Ceaseless Edge
+- Razor Shell
+- Sacred Sword
+- Flip Turn

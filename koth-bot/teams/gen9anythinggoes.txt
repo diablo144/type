@@ -1,0 +1,59 @@
+Koraidon @ Choice Scarf
+Ability: Orichalcum Pulse
+Tera Type: Fire
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Collision Course
+- Flare Blitz
+- Dragon Claw
+- U-turn
+
+Miraidon @ Choice Specs
+Ability: Hadron Engine
+Tera Type: Electric
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Draco Meteor
+- Electro Drift
+- Volt Switch
+- Dazzling Gleam
+
+Calyrex-Shadow @ Choice Specs
+Ability: As One (Spectrier)
+Tera Type: Ghost
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Astral Barrage
+- Psyshock
+- Draining Kiss
+- Trick
+
+Zacian-Crowned @ Rusted Sword
+Ability: Intrepid Sword
+Tera Type: Fairy
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Behemoth Blade
+- Play Rough
+- Sacred Sword
+- Swords Dance
+
+Arceus-Ground @ Earth Plate
+Ability: Multitype
+Tera Type: Ground
+EVs: 248 HP / 8 SpA / 252 Spe
+Timid Nature
+- Judgment
+- Ice Beam
+- Recover
+- Calm Mind
+
+Necrozma-Dusk-Mane @ Heavy-Duty Boots
+Ability: Prism Armor
+Tera Type: Water
+EVs: 252 HP / 4 Atk / 252 Def
+Impish Nature
+- Sunsteel Strike
+- Earthquake
+- Moonlight
+- Stealth Rock

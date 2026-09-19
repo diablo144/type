@@ -1,0 +1,59 @@
+Iron Hands @ Assault Vest
+Ability: Quark Drive
+Tera Type: Fighting
+EVs: 248 HP / 252 Atk / 8 SpD
+Adamant Nature
+- Drain Punch
+- Ice Punch
+- Thunder Punch
+- Earthquake
+
+Togekiss @ Choice Scarf
+Ability: Serene Grace
+Tera Type: Fairy
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Air Slash
+- Dazzling Gleam
+- Aura Sphere
+- Trick
+
+Mimikyu @ Life Orb
+Ability: Disguise
+Tera Type: Ghost
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Swords Dance
+- Play Rough
+- Shadow Sneak
+- Shadow Claw
+
+Haxorus @ Choice Scarf
+Ability: Mold Breaker
+Tera Type: Dragon
+EVs: 252 Atk / 4 SpD / 252 Spe
+Adamant Nature
+- Outrage
+- Earthquake
+- Poison Jab
+- First Impression
+
+Sawk @ Focus Sash
+Ability: Sturdy
+Tera Type: Fighting
+EVs: 252 Atk / 4 SpD / 252 Spe
+Adamant Nature
+- Counter
+- Close Combat
+- Stone Edge
+- Taunt
+
+Sylveon @ Choice Specs
+Ability: Pixilate
+Tera Type: Fairy
+EVs: 252 HP / 252 SpA / 4 SpD
+Modest Nature
+- Hyper Voice
+- Psyshock
+- Shadow Ball
+- Quick Attack

@@ -1,0 +1,59 @@
+Flutter Mane @ Booster Energy
+Ability: Protosynthesis
+Tera Type: Fairy
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Moonblast
+- Dazzling Gleam
+- Shadow Ball
+- Protect
+
+Chien-Pao @ Life Orb
+Ability: Sword of Ruin
+Tera Type: Dark
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Icicle Crash
+- Crunch
+- Sacred Sword
+- Protect
+
+Iron Hands @ Assault Vest
+Ability: Quark Drive
+Tera Type: Fighting
+EVs: 248 HP / 252 Atk / 8 SpD
+Adamant Nature
+- Drain Punch
+- Ice Punch
+- Thunder Punch
+- Earthquake
+
+Chi-Yu @ Choice Specs
+Ability: Beads of Ruin
+Tera Type: Fire
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Overheat
+- Fire Blast
+- Dark Pulse
+- Psychic
+
+Dragonite @ Choice Band
+Ability: Multiscale
+Tera Type: Normal
+EVs: 252 Atk / 4 SpD / 252 Spe
+Adamant Nature
+- Extreme Speed
+- Outrage
+- Earthquake
+- Fire Punch
+
+Gholdengo @ Choice Specs
+Ability: Good as Gold
+Tera Type: Steel
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Make It Rain
+- Shadow Ball
+- Dazzling Gleam
+- Trick

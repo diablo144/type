@@ -1,0 +1,53 @@
+Landorus-Therian @ Leftovers
+Ability: Intimidate
+EVs: 252 HP / 216 Def / 24 SpD
+Impish Nature
+- Earthquake
+- U-turn
+- Stealth Rock
+- Defog
+
+Toxapex @ Black Sludge
+Ability: Regenerator
+EVs: 252 HP / 252 Def / 4 SpD
+Bold Nature
+- Scald
+- Haze
+- Recover
+- Toxic
+
+Heatran @ Leftovers
+Ability: Flash Fire
+EVs: 248 HP / 8 Def / 252 SpD
+Calm Nature
+- Lava Plume
+- Earth Power
+- Toxic
+- Protect
+
+Kartana @ Choice Scarf
+Ability: Beast Boost
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Leaf Blade
+- Smart Strike
+- Sacred Sword
+- Knock Off
+
+Magearna @ Assault Vest
+Ability: Soul-Heart
+EVs: 248 HP / 252 SpA / 8 SpD
+Modest Nature
+- Fleur Cannon
+- Flash Cannon
+- Volt Switch
+- Focus Blast
+
+Greninja @ Choice Specs
+Ability: Protean
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Hydro Pump
+- Dark Pulse
+- Ice Beam
+- U-turn

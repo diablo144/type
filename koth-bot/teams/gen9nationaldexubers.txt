@@ -1,0 +1,53 @@
+Necrozma-Dusk-Mane @ Leftovers
+Ability: Prism Armor
+EVs: 252 HP / 252 Atk / 4 SpD
+Adamant Nature
+- Sunsteel Strike
+- Earthquake
+- Swords Dance
+- Morning Sun
+
+Yveltal @ Heavy-Duty Boots
+Ability: Dark Aura
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Oblivion Wing
+- Dark Pulse
+- Defog
+- Taunt
+
+Groudon-Primal @ Red Orb
+Ability: Desolate Land
+EVs: 248 HP / 252 Atk / 8 SpD
+Adamant Nature
+- Precipice Blades
+- Fire Punch
+- Stone Edge
+- Swords Dance
+
+Kyogre-Primal @ Blue Orb
+Ability: Primordial Sea
+EVs: 248 HP / 252 SpA / 8 SpD
+Modest Nature
+- Origin Pulse
+- Ice Beam
+- Thunder
+- Calm Mind
+
+Marshadow @ Life Orb
+Ability: Technician
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Spectral Thief
+- Close Combat
+- Shadow Sneak
+- Ice Punch
+
+Eternatus @ Black Sludge
+Ability: Pressure
+EVs: 248 HP / 8 SpA / 252 Spe
+Timid Nature
+- Dynamax Cannon
+- Sludge Bomb
+- Flamethrower
+- Recover

@@ -1,0 +1,54 @@
+Landorus-Therian @ Rocky Helmet
+Ability: Intimidate
+EVs: 252 HP / 240 Def / 8 SpD
+Impish Nature
+- Earthquake
+- U-turn
+- Stealth Rock
+- Stone Edge
+
+Heatran @ Leftovers
+Ability: Flash Fire
+EVs: 248 HP / 192 SpD / 68 Spe
+Calm Nature
+- Lava Plume
+- Earth Power
+- Toxic
+- Protect
+
+Keldeo @ Choice Specs
+Ability: Justified
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Hydro Pump
+- Secret Sword
+- Scald
+- Icy Wind
+
+Ferrothorn @ Leftovers
+Ability: Iron Barbs
+EVs: 252 HP / 88 Def / 168 SpD
+Relaxed Nature
+IVs: 0 Spe
+- Power Whip
+- Leech Seed
+- Spikes
+- Protect
+
+Latios @ Life Orb
+Ability: Levitate
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Draco Meteor
+- Psyshock
+- Defog
+- Roost
+
+Metagross-Mega @ Metagrossite
+Ability: Tough Claws
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Meteor Mash
+- Zen Headbutt
+- Hammer Arm
+- Ice Punch

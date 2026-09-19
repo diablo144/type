@@ -1,0 +1,59 @@
+Pikachu @ Light Ball
+Ability: Static
+Tera Type: Electric
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Fake Out
+- Knock Off
+- Extreme Speed
+- Volt Tackle
+
+Sableye @ Leftovers
+Ability: Prankster
+Tera Type: Ghost
+EVs: 252 HP / 252 Def / 4 SpD
+Bold Nature
+- Knock Off
+- Will-O-Wisp
+- Recover
+- Taunt
+
+Hypno @ Leftovers
+Ability: Insomnia
+Tera Type: Psychic
+EVs: 252 HP / 4 Def / 252 SpD
+Calm Nature
+- Psychic
+- Thunder Wave
+- Wish
+- Protect
+
+Sandaconda @ Leftovers
+Ability: Shed Skin
+Tera Type: Ground
+EVs: 252 HP / 252 Def / 4 SpD
+Impish Nature
+- Earthquake
+- Stone Edge
+- Stealth Rock
+- Glare
+
+Dachsbun @ Leftovers
+Ability: Well Baked Body
+Tera Type: Fairy
+EVs: 252 HP / 252 Def / 4 SpD
+Impish Nature
+- Play Rough
+- Body Press
+- Wish
+- Protect
+
+Swanna @ Heavy-Duty Boots
+Ability: Keen Eye
+Tera Type: Water
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Surf
+- Hurricane
+- Roost
+- Defog

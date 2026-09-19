@@ -1,0 +1,54 @@
+Tapu Koko @ Life Orb
+Ability: Electric Surge
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Thunderbolt
+- Dazzling Gleam
+- Protect
+- Taunt
+
+Incineroar @ Figy Berry
+Ability: Intimidate
+EVs: 248 HP / 252 Atk / 8 SpD
+Adamant Nature
+- Fake Out
+- Flare Blitz
+- Knock Off
+- U-turn
+
+Kartana @ Focus Sash
+Ability: Beast Boost
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Leaf Blade
+- Smart Strike
+- Sacred Sword
+- Protect
+
+Tapu Fini @ Leftovers
+Ability: Misty Surge
+EVs: 252 HP / 4 SpA / 252 SpD
+Calm Nature
+IVs: 0 Atk
+- Moonblast
+- Muddy Water
+- Haze
+- Protect
+
+Landorus-Therian @ Choice Scarf
+Ability: Intimidate
+EVs: 4 HP / 252 Atk / 252 Spe
+Adamant Nature
+- Earthquake
+- Rock Slide
+- U-turn
+- Superpower
+
+Metagross-Mega @ Metagrossite
+Ability: Tough Claws
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Meteor Mash
+- Zen Headbutt
+- Ice Punch
+- Protect

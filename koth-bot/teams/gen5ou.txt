@@ -1,0 +1,54 @@
+Politoed @ Leftovers
+Ability: Drizzle
+EVs: 252 HP / 252 Def / 4 SpD
+Bold Nature
+- Scald
+- Ice Beam
+- Encore
+- Protect
+
+Ferrothorn @ Leftovers
+Ability: Iron Barbs
+EVs: 252 HP / 88 Def / 168 SpD
+Relaxed Nature
+IVs: 0 Spe
+- Power Whip
+- Leech Seed
+- Stealth Rock
+- Protect
+
+Keldeo @ Choice Scarf
+Ability: Justified
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Hydro Pump
+- Secret Sword
+- Scald
+- Icy Wind
+
+Rotom-Wash @ Choice Scarf
+Ability: Levitate
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Hydro Pump
+- Volt Switch
+- Thunder
+- Trick
+
+Thundurus-Therian @ Choice Specs
+Ability: Volt Absorb
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Thunder
+- Volt Switch
+- Focus Blast
+- Grass Knot
+
+Tentacruel @ Black Sludge
+Ability: Rain Dish
+EVs: 252 HP / 240 Def / 16 Spe
+Bold Nature
+- Scald
+- Rapid Spin
+- Toxic Spikes
+- Protect

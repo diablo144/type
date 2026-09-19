@@ -1,0 +1,53 @@
+Swampert @ Leftovers
+Ability: Torrent
+EVs: 252 HP / 4 Atk / 252 Def
+Relaxed Nature
+- Earthquake
+- Ice Beam
+- Stealth Rock
+- Roar
+
+Scizor @ Choice Band
+Ability: Technician
+EVs: 248 HP / 252 Atk / 8 SpD
+Adamant Nature
+- Bullet Punch
+- U-turn
+- Superpower
+- Pursuit
+
+Heatran @ Choice Scarf
+Ability: Flash Fire
+EVs: 252 SpA / 4 SpD / 252 Spe
+Naive Nature
+- Fire Blast
+- Earth Power
+- Dragon Pulse
+- Explosion
+
+Latias @ Life Orb
+Ability: Levitate
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Draco Meteor
+- Surf
+- Thunderbolt
+- Recover
+
+Tyranitar @ Choice Band
+Ability: Sand Stream
+EVs: 180 HP / 252 Atk / 76 Spe
+Adamant Nature
+- Crunch
+- Stone Edge
+- Pursuit
+- Superpower
+
+Breloom @ Toxic Orb
+Ability: Poison Heal
+EVs: 12 HP / 252 Atk / 244 Spe
+Adamant Nature
+- Mach Punch
+- Seed Bomb
+- Swords Dance
+- Facade

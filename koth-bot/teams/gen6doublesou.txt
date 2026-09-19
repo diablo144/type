@@ -1,0 +1,56 @@
+Kangaskhan-Mega @ Kangaskhanite
+Ability: Parental Bond
+EVs: 4 HP / 252 Atk / 252 Spe
+Jolly Nature
+- Fake Out
+- Return
+- Sucker Punch
+- Power-Up Punch
+
+Heatran @ Safety Goggles
+Ability: Flash Fire
+EVs: 252 HP / 252 SpA / 4 SpD
+Modest Nature
+IVs: 0 Atk
+- Heat Wave
+- Earth Power
+- Flash Cannon
+- Protect
+
+Landorus-Therian @ Choice Scarf
+Ability: Intimidate
+EVs: 4 HP / 252 Atk / 252 Spe
+Adamant Nature
+- Earthquake
+- Rock Slide
+- U-turn
+- Superpower
+
+Aegislash @ Weakness Policy
+Ability: Stance Change
+EVs: 252 HP / 4 Def / 252 SpA
+Quiet Nature
+IVs: 0 Atk / 0 Spe
+- Shadow Ball
+- Flash Cannon
+- King's Shield
+- Wide Guard
+
+Talonflame @ Sharp Beak
+Ability: Gale Wings
+EVs: 4 HP / 252 Atk / 252 Spe
+Adamant Nature
+- Brave Bird
+- Flare Blitz
+- Tailwind
+- Protect
+
+Cresselia @ Sitrus Berry
+Ability: Levitate
+EVs: 252 HP / 148 Def / 108 SpD
+Bold Nature
+IVs: 0 Atk
+- Psychic
+- Icy Wind
+- Helping Hand
+- Moonlight

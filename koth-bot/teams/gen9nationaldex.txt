@@ -1,0 +1,53 @@
+Great Tusk @ Leftovers
+Ability: Protosynthesis
+EVs: 252 HP / 4 Atk / 252 Def
+Impish Nature
+- Headlong Rush
+- Ice Spinner
+- Rapid Spin
+- Stealth Rock
+
+Gholdengo @ Choice Specs
+Ability: Good as Gold
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Shadow Ball
+- Make It Rain
+- Focus Blast
+- Trick
+
+Tapu Lele @ Choice Specs
+Ability: Psychic Surge
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Psychic
+- Moonblast
+- Focus Blast
+- Psyshock
+
+Kingambit @ Leftovers
+Ability: Supreme Overlord
+EVs: 252 Atk / 4 SpD / 252 Spe
+Adamant Nature
+- Kowtow Cleave
+- Iron Head
+- Sucker Punch
+- Swords Dance
+
+Gliscor @ Toxic Orb
+Ability: Poison Heal
+EVs: 252 HP / 184 Def / 72 Spe
+Impish Nature
+- Earthquake
+- Knock Off
+- Protect
+- Toxic
+
+Medicham-Mega @ Medichamite
+Ability: Pure Power
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- High Jump Kick
+- Zen Headbutt
+- Ice Punch
+- Fake Out

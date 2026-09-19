@@ -1,0 +1,59 @@
+Incineroar @ Heavy-Duty Boots
+Ability: Intimidate
+Tera Type: Grass
+EVs: 248 HP / 8 Atk / 252 SpD
+Careful Nature
+- Knock Off
+- Flare Blitz
+- Parting Shot
+- Will-O-Wisp
+
+Flygon @ Choice Scarf
+Ability: Levitate
+Tera Type: Ground
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Earthquake
+- Outrage
+- U-turn
+- Stone Edge
+
+Vaporeon @ Leftovers
+Ability: Water Absorb
+Tera Type: Water
+EVs: 252 HP / 252 Def / 4 SpD
+Bold Nature
+- Scald
+- Wish
+- Protect
+- Haze
+
+Rotom-Heat @ Heavy-Duty Boots
+Ability: Levitate
+Tera Type: Fire
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Overheat
+- Volt Switch
+- Will-O-Wisp
+- Defog
+
+Passimian @ Choice Scarf
+Ability: Defiant
+Tera Type: Fighting
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Close Combat
+- Knock Off
+- U-turn
+- Gunk Shot
+
+Porygon2 @ Eviolite
+Ability: Trace
+Tera Type: Normal
+EVs: 252 HP / 200 Def / 56 SpD
+Bold Nature
+- Ice Beam
+- Thunderbolt
+- Recover
+- Thunder Wave

@@ -1,0 +1,59 @@
+Koraidon @ Choice Scarf
+Ability: Orichalcum Pulse
+Tera Type: Fire
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Collision Course
+- Flare Blitz
+- Dragon Claw
+- U-turn
+
+Kyogre @ Choice Specs
+Ability: Drizzle
+Tera Type: Water
+EVs: 248 HP / 252 SpA / 8 SpD
+Modest Nature
+- Water Spout
+- Origin Pulse
+- Ice Beam
+- Thunder
+
+Necrozma-Dusk-Mane @ Heavy-Duty Boots
+Ability: Prism Armor
+Tera Type: Water
+EVs: 252 HP / 4 Atk / 252 Def
+Impish Nature
+- Sunsteel Strike
+- Earthquake
+- Moonlight
+- Stealth Rock
+
+Giratina-Origin @ Griseous Core
+Ability: Levitate
+Tera Type: Ghost
+EVs: 248 HP / 252 Atk / 8 SpD
+Adamant Nature
+- Shadow Force
+- Dragon Claw
+- Earthquake
+- Defog
+
+Arceus-Fairy @ Pixie Plate
+Ability: Multitype
+Tera Type: Fairy
+EVs: 248 HP / 8 SpA / 252 Spe
+Timid Nature
+- Judgment
+- Earth Power
+- Recover
+- Defog
+
+Flutter Mane @ Choice Specs
+Ability: Protosynthesis
+Tera Type: Fairy
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Moonblast
+- Shadow Ball
+- Psyshock
+- Mystical Fire

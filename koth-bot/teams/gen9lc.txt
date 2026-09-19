@@ -1,0 +1,59 @@
+Mienfoo @ Eviolite
+Ability: Regenerator
+Level: 5
+EVs: 236 Atk / 36 Def / 236 Spe
+Jolly Nature
+- High Jump Kick
+- Knock Off
+- U-turn
+- Fake Out
+
+Vullaby @ Eviolite
+Ability: Overcoat
+Level: 5
+EVs: 236 HP / 236 Def / 36 SpD
+Impish Nature
+- Brave Bird
+- Knock Off
+- Roost
+- Defog
+
+Pawniard @ Eviolite
+Ability: Defiant
+Level: 5
+EVs: 236 Atk / 36 Def / 236 Spe
+Adamant Nature
+- Knock Off
+- Sucker Punch
+- Iron Head
+- Swords Dance
+
+Elekid @ Life Orb
+Ability: Static
+Level: 5
+EVs: 36 HP / 236 SpA / 236 Spe
+Timid Nature
+- Thunderbolt
+- Psychic
+- Volt Switch
+- Focus Blast
+
+Greavard @ Eviolite
+Ability: Fluffy
+Level: 5
+EVs: 36 HP / 236 Atk / 236 Spe
+Adamant Nature
+- Poltergeist
+- Crunch
+- Ice Fang
+- Protect
+
+Foongus @ Eviolite
+Ability: Regenerator
+Level: 5
+EVs: 124 HP / 160 Def / 160 SpD
+Bold Nature
+- Spore
+- Giga Drain
+- Sludge Bomb
+- Synthesis

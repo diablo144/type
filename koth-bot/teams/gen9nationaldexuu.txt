@@ -1,0 +1,53 @@
+Keldeo @ Choice Specs
+Ability: Justified
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Hydro Pump
+- Secret Sword
+- Icy Wind
+- Flip Turn
+
+Rotom-Wash @ Leftovers
+Ability: Levitate
+EVs: 252 HP / 200 Def / 56 Spe
+Bold Nature
+- Hydro Pump
+- Volt Switch
+- Will-O-Wisp
+- Pain Split
+
+Excadrill @ Choice Scarf
+Ability: Mold Breaker
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Earthquake
+- Iron Head
+- Rock Slide
+- Rapid Spin
+
+Latias-Mega @ Latiasite
+Ability: Levitate
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Draco Meteor
+- Psyshock
+- Recover
+- Defog
+
+Aerodactyl-Mega @ Aerodactylite
+Ability: Tough Claws
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Stone Edge
+- Earthquake
+- Ice Fang
+- Fire Fang
+
+Suicune @ Leftovers
+Ability: Pressure
+EVs: 252 HP / 252 Def / 4 SpD
+Bold Nature
+- Scald
+- Calm Mind
+- Rest
+- Sleep Talk

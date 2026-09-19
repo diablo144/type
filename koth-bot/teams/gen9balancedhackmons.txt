@@ -1,0 +1,59 @@
+Chansey @ Eviolite
+Ability: Imposter
+Tera Type: Normal
+EVs: 252 HP / 252 Def / 4 SpD
+Bold Nature
+- Fake Out
+- Whirlwind
+- Stealth Rock
+- Soft-Boiled
+
+Gholdengo @ Choice Specs
+Ability: Adaptability
+Tera Type: Steel
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Make It Rain
+- Moongeist Beam
+- Secret Sword
+- Blue Flare
+
+Arceus @ Silk Scarf
+Ability: Sword of Ruin
+Tera Type: Normal
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Swords Dance
+- Extreme Speed
+- Precipice Blades
+- Knock Off
+
+Giratina @ Leftovers
+Ability: Magic Guard
+Tera Type: Ghost
+EVs: 252 HP / 252 Def / 4 SpD
+Impish Nature
+- Spirit Shackle
+- Shore Up
+- Defog
+- Will-O-Wisp
+
+Eternatus @ Life Orb
+Ability: Beads of Ruin
+Tera Type: Dragon
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Torch Song
+- Draco Meteor
+- Sludge Bomb
+- Blue Flare
+
+Deoxys-Speed @ Focus Sash
+Ability: Prankster
+Tera Type: Psychic
+EVs: 252 HP / 4 Def / 252 Spe
+Jolly Nature
+- Stealth Rock
+- Taunt
+- Encore
+- Haze

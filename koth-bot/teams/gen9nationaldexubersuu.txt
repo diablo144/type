@@ -1,0 +1,53 @@
+Dialga @ Leftovers
+Ability: Pressure
+EVs: 252 HP / 252 SpA / 4 SpD
+Modest Nature
+- Draco Meteor
+- Flash Cannon
+- Thunder Wave
+- Stealth Rock
+
+Palkia @ Lustrous Orb
+Ability: Pressure
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+- Spacial Rend
+- Hydro Pump
+- Fire Blast
+- Thunder Wave
+
+Giratina @ Leftovers
+Ability: Pressure
+EVs: 252 HP / 252 Def / 4 SpD
+Bold Nature
+- Hex
+- Will-O-Wisp
+- Defog
+- Thunder Wave
+
+Reshiram @ Choice Specs
+Ability: Turboblaze
+EVs: 252 SpA / 4 SpD / 252 Spe
+Modest Nature
+- Blue Flare
+- Draco Meteor
+- Earth Power
+- Focus Blast
+
+Genesect @ Choice Scarf
+Ability: Download
+EVs: 4 Atk / 252 SpA / 252 Spe
+Hasty Nature
+- U-turn
+- Ice Beam
+- Thunderbolt
+- Flamethrower
+
+Solgaleo @ Leftovers
+Ability: Full Metal Body
+EVs: 252 HP / 252 Atk / 4 SpD
+Jolly Nature
+- Sunsteel Strike
+- Earthquake
+- Morning Sun
+- Toxic
