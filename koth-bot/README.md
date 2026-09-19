@@ -5,14 +5,15 @@ for every ladder format, a self-play test harness, and a KOTH lobby client.
 
 ## Status
 
-- `src/ai.js` — heuristic battle AI. Self-play: **21/21 games decisive,
-  0 choice errors, 0 exceptions** across gen9ou / gen6vgc2015 / gen9doublesou /
-  gen1ou / gen4ou / gen9ubers / gen3ou (AI vs random driver, ~2.5s total).
+- `src/ai.js` — heuristic battle AI. Self-play: **42/42 games decisive,
+  0 choice errors, 0 exceptions** across 21 formats x2 (AI vs random driver,
+  ~3.5s total).
 - `teams/` — 54/54 KOTH config formats covered (37 validator-LEGAL, 2
   bring-limited but legal, 15 unknown-to-local-sim but sanity-checked).
 - `src/koth-client.js` + `src/main.js` — lobby client + bot loop. Battle
-  protocol is complete (Showdown standard); lobby HTTP routes are best-guess
-  one-liners — confirm from one DevTools recording (see below).
+  protocol is complete (Showdown standard); lobby routes are mapped from live
+  server probes (see "Lobby protocol"); run `sniff.js` once to confirm the
+  message vocabulary with your session.
 
 ## Setup
 

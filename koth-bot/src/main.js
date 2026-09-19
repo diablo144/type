@@ -78,11 +78,13 @@ async function main() {
         return;
       }
       // Accept inside the acceptSeconds window, then play.
-      const accept = await client.http.acceptBattle();
-      log(`accept: ${accept.path} -> http ${accept.status}`);
-      const ws = client.connectBattleWs(seat.wsUrl);
+      // (Battles normally arrive on the shared queue socket: seat.shared.)
+      await client.acceptSeat(seat);
+      const ws = client.connectBattleWs(seat.wsUrl || null);
       const result = await client.playBattle(ws, seat.room || null);
-      try { ws.close(); } catch { /* ignore */ }
+      if (!seat.shared) {
+        try { ws.close(); } catch { /* ignore */ }
+      }
       if (result === 'win') wins++;
       else if (result === 'loss') losses++;
       else ties++;

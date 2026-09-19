@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node src/main.js",
     "once": "node src/main.js --once",
+    "sniff": "node src/sniff.js",
     "selfplay": "node test/selfplay.js",
     "validate": "node src/validate.js"
   },
